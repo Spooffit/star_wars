@@ -4,4 +4,6 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 
-**/star_wars_DB/
+src/star_wars.Web/star_wars_DB.db
+src/star_wars.Web/star_wars_DB.db-shm
+src/star_wars.Web/star_wars_DB.db-wal
