@@ -1,8 +1,42 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FCE83F3A-04B1-4B31-9AC5-277583FBB59D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "star_wars.Core", "src\star_wars.Core\star_wars.Core.csproj", "{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "star_wars.Application", "src\star_wars.Application\star_wars.Application.csproj", "{8164C4D2-6326-4DF9-9D15-F14CA859010B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "star_wars.Infrastructure", "src\star_wars.Infrastructure\star_wars.Infrastructure.csproj", "{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "star_wars.Web", "src\star_wars.Web\star_wars.Web.csproj", "{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8164C4D2-6326-4DF9-9D15-F14CA859010B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8164C4D2-6326-4DF9-9D15-F14CA859010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8164C4D2-6326-4DF9-9D15-F14CA859010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8164C4D2-6326-4DF9-9D15-F14CA859010B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BEC2EB6-ACFC-4AD9-B1CF-923F82D1410A} = {FCE83F3A-04B1-4B31-9AC5-277583FBB59D}
+		{8164C4D2-6326-4DF9-9D15-F14CA859010B} = {FCE83F3A-04B1-4B31-9AC5-277583FBB59D}
+		{60F4E99F-B68D-4CFC-80C2-3A66E364E6F0} = {FCE83F3A-04B1-4B31-9AC5-277583FBB59D}
+		{A4EB85E3-87FF-4D69-92EF-17D62EA5DC29} = {FCE83F3A-04B1-4B31-9AC5-277583FBB59D}
 	EndGlobalSection
 EndGlobal
