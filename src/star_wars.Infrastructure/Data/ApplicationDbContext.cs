@@ -6,9 +6,9 @@ namespace star_wars.Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    public DbSet<Character> Characters { get; }
-    public DbSet<Movie> Movies { get; }
-    public DbSet<Planet> Planets { get; }
+    public DbSet<Character> Characters { get; set; }
+    public DbSet<Movie> Movies { get; set;}
+    public DbSet<Planet> Planets { get; set;}
 
     public ApplicationDbContext(DbContextOptions options) :base(options){}
 
