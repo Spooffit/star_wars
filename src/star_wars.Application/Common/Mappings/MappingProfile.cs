@@ -14,8 +14,26 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<UpdateCharacterDto, Character>();
         CreateMap<UpdateCharacterDto, GetCharacterDto>();
-        
-        CreateMap<ICollection<GetCharacterDto>, CharacterListViewModel>();
+
+        CreateMap<ICollection<GetCharacterDto>, CharacterListViewModel>()
+            .ForMember(dest => dest.Characters, opt =>
+                opt.MapFrom(src =>
+                    src.Select(dto => new CharacterViewModel
+                    {
+                        Id = dto.Id,
+                        Name = dto.Name,
+                        OriginName = dto.OriginName,
+                        Birthdate = dto.Birthdate,
+                        Planet = dto.Planet,
+                        Gender = dto.Gender,
+                        Species = dto.Species,
+                        Height = dto.Height,
+                        HairColor = dto.HairColor,
+                        EyeColor = dto.EyeColor,
+                        Description = dto.Description,
+                        Movies = dto.Movies.ToList()
+                    }).ToList()));
+
         CreateMap<GetCharacterDto, CharacterViewModel>();
     }
 }
