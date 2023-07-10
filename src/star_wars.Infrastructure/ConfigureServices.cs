@@ -3,7 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using star_wars.Application.Common.Interfaces;
+using star_wars.Application.Common.Interfaces.Repositories;
+using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Infrastructure.Data;
+using star_wars.Infrastructure.Data.Repositories;
+using star_wars.Infrastructure.Services;
 
 namespace star_wars.Infrastructure;
 
@@ -24,6 +28,9 @@ public static class ConfigureServices
             provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddScoped<ApplicationDbContextInitializer>();
+
+        services.AddScoped<ICharacterRepository, CharacterRepository>();
+        services.AddScoped<ICharacterService, CharacterService>();
 
         return services;
     }
