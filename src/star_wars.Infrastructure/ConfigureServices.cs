@@ -31,6 +31,7 @@ public static class ConfigureServices
 
         services.AddScoped<ICharacterRepository, CharacterRepository>();
         services.AddScoped<ICharacterService, CharacterService>();
+        services.AddScoped<ICharacterViewModelService, CharacterService>();
 
         return services;
     }

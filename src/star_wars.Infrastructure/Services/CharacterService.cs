@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using star_wars.Application.Common.Interfaces.Repositories;
 using star_wars.Application.Common.Interfaces.Services;
-using star_wars.Application.Common.Models;
+using star_wars.Application.Common.Models.Dto.Character;
+using star_wars.Application.Common.Models.ViewModels.Character;
 using star_wars.Core.Entities;
 
 namespace star_wars.Infrastructure.Services;
 
-public class CharacterService : ICharacterService
+public class CharacterService : ICharacterService, ICharacterViewModelService
 {
     private readonly ICharacterRepository _characterRepository;
     private readonly IMapper _mapper;
@@ -54,5 +55,22 @@ public class CharacterService : ICharacterService
     public async Task<bool> DeleteCharacterByIdAsync(int id)
     {
         return await _characterRepository.DeleteCharacterByIdAsync(id);
+    }
+    
+
+    
+    
+    public CharacterListViewModel MapCharacterListToViewModel(ICollection<GetCharacterDto> charactersDto)
+    {
+        var characterListViewModel = _mapper.Map<CharacterListViewModel>(charactersDto);
+
+        return characterListViewModel;
+    }
+
+    public CharacterViewModel MapCharacterToViewModel(GetCharacterDto characterDto)
+    {
+        var characterViewModel = _mapper.Map<CharacterViewModel>(characterDto);
+
+        return characterViewModel;
     }
 }
