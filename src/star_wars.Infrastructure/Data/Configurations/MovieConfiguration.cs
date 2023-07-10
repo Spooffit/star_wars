@@ -4,12 +4,14 @@ using star_wars.Core.Entities;
 
 namespace star_wars.Infrastructure.Data.Configurations;
 
-public class MovieConfigurations : IEntityTypeConfiguration<Movie>
+public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.HasKey(m => m.Id);
         builder.HasIndex(m => m.Id)
+            .IsUnique();
+        builder.HasIndex(m => m.Title)
             .IsUnique();
         builder.Property(m => m.Id)
             .ValueGeneratedOnAdd();
@@ -17,9 +19,5 @@ public class MovieConfigurations : IEntityTypeConfiguration<Movie>
         builder.Property(m => m.Title)
             .HasMaxLength(100)
             .IsRequired();
-        builder.HasMany(m => m.Characters)
-            .WithMany(c => c.Movies)
-            .UsingEntity<CharacterMovie>();
-
     }
 }
