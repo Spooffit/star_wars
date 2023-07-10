@@ -1,9 +1,10 @@
 ﻿using star_wars.Core.Entities;
 
-namespace star_wars.Application.Common.Models;
+namespace star_wars.Application.Common.Models.Dto.Character;
 
-public class AddCharacterDto
+public class GetCharacterDto
 {
+    public int Id { get; }
     public string Name { get; }
     public string OriginName { get; }
     public int Birthdate { get; }

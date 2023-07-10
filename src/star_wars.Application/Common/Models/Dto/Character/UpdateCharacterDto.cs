@@ -1,8 +1,8 @@
 ﻿using star_wars.Core.Entities;
 
-namespace star_wars.Application.Common.Models;
+namespace star_wars.Application.Common.Models.Dto.Character;
 
-public class GetCharacterDto
+public class UpdateCharacterDto
 {
     public int Id { get; }
     public string Name { get; }
