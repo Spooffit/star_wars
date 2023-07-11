@@ -15,6 +15,7 @@ public class MappingProfile : Profile
         CreateMap<UpdateCharacterDto, GetCharacterDto>();
 
         CreateMap<GetCharacterDto, CharacterViewModel>();
+        CreateMap<CharacterViewModel, UpdateCharacterDto>();
         CreateMap<ICollection<GetCharacterDto>, CharacterListViewModel>()
             .ForMember(dest => dest.Characters, opt =>
                 opt.MapFrom(src => src.ToList()));
