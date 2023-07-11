@@ -17,7 +17,10 @@ public class CharacterRepository : ICharacterRepository
     }
     public async Task<ICollection<Character>> GetAllCharactersAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet
+            .Include(c => c.Movies)
+            .Include(c => c.Planet)
+            .ToListAsync();
     }
 
     public async Task<Character> GetCharacterByIdAsync(int id)

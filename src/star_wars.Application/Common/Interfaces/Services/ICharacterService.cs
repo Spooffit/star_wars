@@ -1,4 +1,4 @@
-﻿using star_wars.Application.Common.Models;
+﻿using star_wars.Application.Common.Models.Dto.Character;
 
 namespace star_wars.Application.Common.Interfaces.Services;
 
