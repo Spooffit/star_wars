@@ -25,7 +25,10 @@ public class CharacterRepository : ICharacterRepository
 
     public async Task<Character> GetCharacterByIdAsync(int id)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet
+            .Include(c => c.Movies)
+            .Include(c => c.Planet)
+            .SingleOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task AddCharacterAsync(Character newCharacter)
