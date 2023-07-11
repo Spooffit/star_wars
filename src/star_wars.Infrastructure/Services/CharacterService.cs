@@ -60,17 +60,24 @@ public class CharacterService : ICharacterService, ICharacterViewModelService
 
     
     
-    public CharacterListViewModel MapCharacterListToViewModel(ICollection<GetCharacterDto> charactersDto)
+    public CharacterListViewModel MapCharacterDtoListToViewModel(ICollection<GetCharacterDto> charactersDto)
     {
         var characterListViewModel = _mapper.Map<CharacterListViewModel>(charactersDto);
 
         return characterListViewModel;
     }
 
-    public CharacterViewModel MapCharacterToViewModel(GetCharacterDto characterDto)
+    public CharacterViewModel MapCharacterDtoToViewModel(GetCharacterDto characterDto)
     {
         var characterViewModel = _mapper.Map<CharacterViewModel>(characterDto);
 
         return characterViewModel;
+    }
+
+    public UpdateCharacterDto MapViewModelToUpdateCharacterDto(CharacterViewModel characterViewModel)
+    {
+        var characterDto = _mapper.Map<UpdateCharacterDto>(characterViewModel);
+
+        return characterDto;
     }
 }
