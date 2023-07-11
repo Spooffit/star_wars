@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.logo{
+  max-width: 200px;
+  max-height: 100px;
+}
