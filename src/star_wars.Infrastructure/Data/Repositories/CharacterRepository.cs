@@ -15,42 +15,42 @@ public class CharacterRepository : ICharacterRepository
         _db = db;
         _dbSet = _db.Set<Character>();
     }
-    public async Task<ICollection<Character>> GetAllCharactersAsync()
+    public async Task<IList<Character>> GetAllCharactersAsync()
     {
-        return await _dbSet
-            .Include(c => c.Movies)
-            .Include(c => c.Planet)
-            .ToListAsync();
+        return await _dbSet.ToListAsync();
     }
 
     public async Task<Character> GetCharacterByIdAsync(int id)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet
+            .Include(c => c.Movies)
+            .SingleOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task AddCharacterAsync(Character newCharacter)
+    public async Task<Character> AddCharacterAsync(Character newCharacter)
     {
         await _dbSet.AddAsync(newCharacter);
         await SaveChangesAsync();
+        return newCharacter;
     }
 
-    public async Task UpdateCharacterAsync(Character updateCharacter)
+    public async Task<Character> UpdateCharacterAsync(Character updateCharacter)
     {
         _dbSet.Update(updateCharacter);
         await SaveChangesAsync();
+        return updateCharacter;
     }
 
     public async Task<bool> DeleteCharacterByIdAsync(int id)
     {
-        var entity = await _dbSet.FindAsync(id);
-        if (entity != null)
-        {
-            _dbSet.Remove(entity);
-            await SaveChangesAsync();
-            return true;
-        }
-
-        return false;
+        var character = await _dbSet.FindAsync(id);
+        if (character == null)
+            return false;
+        
+        _dbSet.Remove(character);
+        await SaveChangesAsync();
+        
+        return true;
     }
 
     private async Task SaveChangesAsync(CancellationToken cancellationToken = default)
