@@ -1,15 +1,15 @@
-﻿@model star_wars.Application.Common.Models.ViewModels.Character.EditCharacterViewModel
+﻿@model star_wars.Application.Common.Models.ViewModels.Character.AddCharacterViewModel
 
 @{
-    ViewBag.Title = $"Редактирование персонажа - {@Model.Name}";
+    ViewBag.Title = "Добавление персонажа";
     Layout = "_Layout";
 }
 
 <div class="mb-5">
-    <h2>Редактирование персонажа</h2>
+    <h2>Добавление персонажа</h2>
 </div>
 
-<form method="post" asp-action="Edit">
+<form method="post" asp-action="Add">
     <div class="row">
         <div class="col-8">
 
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-8">
                     <div class="input-group">
-                        <input min="0" type="number" value="@Math.Abs(Model.Birthdate)" id="birthDateUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" required autocomplete="off"/>
+                        <input value="" min="0" type="number" id="birthDateUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" required/>
                         <select id="birthDateEpochSelect" class="form-select bg-dark text-white" style="max-width: 80px" onchange="HandleBirthdayValue()">
                             @if (Model.Birthdate < 0)
                             {
@@ -54,7 +54,7 @@
                         </select>
                     </div>
 
-                    <input asp-for="Birthdate" id="birthDateFormInput" hidden>
+                    <input value="" asp-for="Birthdate" id="birthDateFormInput" hidden>
                     <span asp-validation-for="Birthdate" class="text-danger"></span>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                     <label asp-for="Height">Рост</label>
                 </div>
                 <div class="col-8">
-                    <input type="number" step="0.01" min="0.01" asp-for="Height" class="form-control bg-dark text-white" required/>
+                    <input type="number" step="0.01" min="0.01" value="" asp-for="Height" class="form-control bg-dark text-white" required/>
                     <span asp-validation-for="Height" class="text-danger"></span>
                 </div>
             </div>
@@ -168,7 +168,7 @@
     <div class="form-group row p-2">
         <div class="col-12">
             <input type="submit" class="btn btn-light text-dark float-end" value="Сохранить" />
-            <button formaction="@Url.Action("Delete", new {id = Model.Id})" class="btn btn-light text-dark float-end me-2">Удалить</button>
+            <a asp-action="Delete" class="btn btn-light text-dark float-end me-2">Удалить</a>
         </div>
     </div>
 </form>

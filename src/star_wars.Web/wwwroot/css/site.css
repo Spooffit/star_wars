@@ -8,6 +8,18 @@ html {
   }
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; // Yeah, yeah everybody write about it
+}
+
+input[type='number'],
+input[type="number"]:hover,
+input[type="number"]:focus {
+  appearance: none;
+  -moz-appearance: textfield;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -24,4 +36,36 @@ body {
 .logo{
   max-width: 200px;
   max-height: 100px;
+}
+
+.form-control:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
+}
+
+btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #89a7ff;
+}
+
+.select-style {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.select-style:hover,
+.select-style:focus {
+  background-color: #fff;
+  color: #000;
+}
+
+.select-style option:first-child {
+  color: #aaa;
+}
+
+textarea {
+  resize: none;
+}
+
+ul{
+  padding: 0;
 }
