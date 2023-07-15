@@ -1,16 +1,19 @@
-﻿using star_wars.Application.Common.Models.Dto.Character;
+﻿using star_wars.Application.Common.Models.ViewModels.Character;
 
 namespace star_wars.Application.Common.Interfaces.Services;
 
 public interface ICharacterService
 {
-    Task<ICollection<GetCharacterDto>> GetAllCharactersAsync();
+    Task<IndexCharacterListViewModel> GetAllIndexCharactersAsync();
     
-    Task<GetCharacterDto> GetCharacterByIdAsync(int id);
+    Task<InfoCharacterViewModel> GetInfoCharacterByIdAsync(int id);
     
-    Task<GetCharacterDto> AddCharacterAsync(AddCharacterDto newCharacter);
+    Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id);
+    Task<AddCharacterViewModel> GetAddCharacterAsync();
+
+    Task<AddCharacterViewModel> AddCharacterAsync(AddCharacterViewModel newAddCharacter);
     
-    Task<GetCharacterDto> UpdateCharacterAsync(UpdateCharacterDto updateCharacter);
+    Task<EditCharacterViewModel> UpdateCharacterAsync(EditCharacterViewModel updateAddCharacter);
     
     Task<bool> DeleteCharacterByIdAsync(int id);
 }

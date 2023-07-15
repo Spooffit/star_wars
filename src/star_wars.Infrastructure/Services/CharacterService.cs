@@ -1,83 +1,133 @@
 ﻿using AutoMapper;
 using star_wars.Application.Common.Interfaces.Repositories;
 using star_wars.Application.Common.Interfaces.Services;
-using star_wars.Application.Common.Models.Dto.Character;
 using star_wars.Application.Common.Models.ViewModels.Character;
+using star_wars.Application.Common.Models.ViewModels.Movie;
 using star_wars.Core.Entities;
 
 namespace star_wars.Infrastructure.Services;
 
-public class CharacterService : ICharacterService, ICharacterViewModelService
+public class CharacterService : ICharacterService
 {
     private readonly ICharacterRepository _characterRepository;
+    private readonly IMovieRepository _movieRepository;
     private readonly IMapper _mapper;
 
     public CharacterService(
         ICharacterRepository characterRepository,
+        IMovieRepository movieRepository,
         IMapper mapper)
     {
         _characterRepository = characterRepository;
+        _movieRepository = movieRepository;
         _mapper = mapper;
     }
 
-    public async Task<ICollection<GetCharacterDto>> GetAllCharactersAsync()
+    public async Task<IndexCharacterListViewModel> GetAllIndexCharactersAsync()
     {
-        var entityList = await _characterRepository.GetAllCharactersAsync();
+        var entities = await _characterRepository.GetAllCharactersAsync();
+        var entitiesViewModel = _mapper.Map<List<IndexCharacterViewModel>>(entities);
 
-        return _mapper.Map<ICollection<GetCharacterDto>>(entityList);
+        var viewModel = new IndexCharacterListViewModel
+        {
+            Characters = entitiesViewModel
+        };
+
+        return viewModel;
     }
 
-    public async Task<GetCharacterDto> GetCharacterByIdAsync(int id)
+    async Task<InfoCharacterViewModel> ICharacterService.GetInfoCharacterByIdAsync(int id)
     {
         var entity = await _characterRepository.GetCharacterByIdAsync(id);
-        if (entity == null)
-        {
-            throw new Exception();
-        }
+        var viewModel = _mapper.Map<InfoCharacterViewModel>(entity);
+
+        return viewModel;
+    }
+
+    public async Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id)
+    {
+        var entity = await _characterRepository.GetCharacterByIdAsync(id);
+        var allMovies = await _movieRepository.GetAllMoviesAsync();
         
-        return _mapper.Map<GetCharacterDto>(entity);
+        var viewModel = _mapper.Map<EditCharacterViewModel>(entity);
+        
+        var characterOwnsMovieListTitle = entity.Movies
+            .Select(x => x.Title);
+        
+        var moviesViewModels = _mapper.Map<List<MovieViewModel>>(allMovies.Where(m => !characterOwnsMovieListTitle.Contains(m.Title)).ToList());
+        
+        viewModel.OwnsMovies = string.Join(",",characterOwnsMovieListTitle);
+        viewModel.RestAllMovies = moviesViewModels;
+
+        return viewModel;
     }
 
-    public async Task<GetCharacterDto> AddCharacterAsync(AddCharacterDto newCharacter)
+    public async Task<AddCharacterViewModel> GetAddCharacterAsync()
     {
-        var entity = _mapper.Map<Character>(newCharacter);
+        var allMovies = await _movieRepository.GetAllMoviesAsync();
+        var allViewModelMovies = _mapper.Map<List<MovieViewModel>>(allMovies);
+        
+        var viewModel = new AddCharacterViewModel
+        {
+            RestAllMovies = allViewModelMovies
+        };
+
+        return viewModel;
+    }
+
+    public async Task<AddCharacterViewModel> GetInfoCharacterByIdAsync(int id)
+    {
+        var entity = await _characterRepository.GetCharacterByIdAsync(id);
+        var viewModel = _mapper.Map<AddCharacterViewModel>(entity);
+
+        return viewModel;
+    }
+
+    public async Task<AddCharacterViewModel> AddCharacterAsync(AddCharacterViewModel viewModel)
+    {
+        var entity = _mapper.Map<Character>(viewModel);
+        if (viewModel.OwnsMovies is not null)
+        {
+            var selectedMoviesTitles = viewModel.OwnsMovies.Split(",");
+            var allExistingMovies = await _movieRepository.GetAllMoviesAsync();
+            var selectedMovies = allExistingMovies.Where(m => selectedMoviesTitles.Contains(m.Title)).ToList();
+            
+            entity.Movies = selectedMovies;
+        }
+        else
+            entity.Movies.Clear();
+        
         await _characterRepository.AddCharacterAsync(entity);
-        return _mapper.Map<GetCharacterDto>(entity);
+        return viewModel;
     }
 
-    public async Task<GetCharacterDto> UpdateCharacterAsync(UpdateCharacterDto updateCharacter)
+    public async Task<EditCharacterViewModel> UpdateCharacterAsync(EditCharacterViewModel viewModel)
     {
-        var entity = _mapper.Map<Character>(updateCharacter);
-        await _characterRepository.UpdateCharacterAsync(entity);
-        return _mapper.Map<GetCharacterDto>(entity);
+        var existingEntity = await _characterRepository.GetCharacterByIdAsync(viewModel.Id);
+        
+        _mapper.Map(viewModel, existingEntity);
+
+        if (viewModel.OwnsMovies is not null)
+        {
+            var selectedMoviesTitles = viewModel.OwnsMovies.Split(",");
+            var allExistingMovies = await _movieRepository.GetAllMoviesAsync();
+            var selectedMovies = allExistingMovies.Where(m => selectedMoviesTitles.Contains(m.Title)).ToList();
+            
+            existingEntity.Movies = selectedMovies;
+        }
+        else
+            existingEntity.Movies.Clear();
+
+        await _characterRepository.UpdateCharacterAsync(existingEntity);
+        return viewModel;
     }
+
+
 
     public async Task<bool> DeleteCharacterByIdAsync(int id)
     {
         return await _characterRepository.DeleteCharacterByIdAsync(id);
     }
-    
-
-    
-    
-    public CharacterListViewModel MapCharacterDtoListToViewModel(ICollection<GetCharacterDto> charactersDto)
-    {
-        var characterListViewModel = _mapper.Map<CharacterListViewModel>(charactersDto);
-
-        return characterListViewModel;
-    }
-
-    public CharacterViewModel MapCharacterDtoToViewModel(GetCharacterDto characterDto)
-    {
-        var characterViewModel = _mapper.Map<CharacterViewModel>(characterDto);
-
-        return characterViewModel;
-    }
-
-    public UpdateCharacterDto MapViewModelToUpdateCharacterDto(CharacterViewModel characterViewModel)
-    {
-        var characterDto = _mapper.Map<UpdateCharacterDto>(characterViewModel);
-
-        return characterDto;
-    }
 }
+
+
