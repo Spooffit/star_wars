@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Application.Common.Models.ViewModels.Character;
+using X.PagedList;
 
 
 namespace star_wars.Web.Controllers;
@@ -16,11 +17,12 @@ public class CatalogController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<ActionResult> Index(int page = 1, int pageSize = 8)
     {
-        var viewModel = await _characterService.GetAllIndexCharactersAsync();
+        var viewModel = await _characterService.GetPagedIndexCharactersAsync(page, pageSize);
+        var pagedList = new StaticPagedList<IndexCharacterViewModel>(viewModel, page, pageSize, viewModel.TotalItemCount);
 
-        return View(viewModel);
+        return View(pagedList);
     }
     
     [HttpGet]

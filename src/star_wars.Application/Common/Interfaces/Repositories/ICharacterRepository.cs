@@ -1,10 +1,13 @@
 ﻿using star_wars.Core.Entities;
+using X.PagedList;
 
 namespace star_wars.Application.Common.Interfaces.Repositories;
 
 public interface ICharacterRepository
 {
-    Task<IList<Character>> GetAllCharactersAsync();
+    Task<IPagedList<Character>> GetPagedCharactersAsync(int page, int pageSize);
+    
+    Task<int> GetTotalCharacterCountAsync();
     
     Task<Character> GetCharacterByIdAsync(int id);
 

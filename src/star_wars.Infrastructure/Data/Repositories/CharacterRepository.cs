@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using star_wars.Application.Common.Interfaces.Repositories;
 using star_wars.Core.Entities;
+using X.PagedList;
 
 namespace star_wars.Infrastructure.Data.Repositories;
 
@@ -15,12 +16,14 @@ public class CharacterRepository : ICharacterRepository
         _db = db;
         _dbSet = _db.Set<Character>();
     }
-    public async Task<IList<Character>> GetAllCharactersAsync()
+    public async Task<IPagedList<Character>> GetPagedCharactersAsync(int page, int pageSize)
     {
-        return await _dbSet
-            .Include(c => c.Movies)
-            .Include(c => c.Planet)
-            .ToListAsync();
+        return await _dbSet.ToPagedListAsync(page, pageSize);
+    }
+
+    public async Task<int> GetTotalCharacterCountAsync()
+    {
+        return await _dbSet.CountAsync();
     }
 
     public async Task<Character> GetCharacterByIdAsync(int id)

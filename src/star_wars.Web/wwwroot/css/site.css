@@ -38,6 +38,14 @@ body {
   max-height: 100px;
 }
 
+textarea {
+  resize: none;
+}
+
+ul{
+  padding: 0;
+}
+
 .form-control:focus {
   border-color: #ffffff;
   box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
@@ -54,18 +62,43 @@ btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
 
 .select-style:hover,
 .select-style:focus {
-  background-color: #fff;
-  color: #000;
+  background-color: white;
+  color: black;
 }
 
 .select-style option:first-child {
-  color: #aaa;
+  color: white;
 }
 
-textarea {
-  resize: none;
+.pagination > li > a
+{
+  background-color: black;
+  color: white;
 }
 
-ul{
-  padding: 0;
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+
+.pagination > .active > a
+{
+  color: black; ;
+  background-color: white !important;
+  border: solid 1px black !important;
+}
+
+.page-item.active .page-link {
+  color: black;
+}
+
+.pagination > .active > a:hover
+{
+  background-color: white !important;
+  border: solid 1px black;
 }

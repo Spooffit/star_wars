@@ -4,6 +4,7 @@ using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Application.Common.Models.ViewModels.Character;
 using star_wars.Application.Common.Models.ViewModels.Movie;
 using star_wars.Core.Entities;
+using X.PagedList;
 
 namespace star_wars.Infrastructure.Services;
 
@@ -23,26 +24,18 @@ public class CharacterService : ICharacterService
         _mapper = mapper;
     }
 
-    public async Task<IndexCharacterListViewModel> GetAllIndexCharactersAsync()
+    public async Task<IPagedList<IndexCharacterViewModel>> GetPagedIndexCharactersAsync(int page = 1, int pageSize = 10)
     {
-        var entities = await _characterRepository.GetAllCharactersAsync();
+        var entities = await _characterRepository.GetPagedCharactersAsync(page, pageSize);
         var entitiesViewModel = _mapper.Map<List<IndexCharacterViewModel>>(entities);
 
-        var viewModel = new IndexCharacterListViewModel
-        {
-            Characters = entitiesViewModel
-        };
+        var totalCount = await _characterRepository.GetTotalCharacterCountAsync();
 
-        return viewModel;
+        var pagedList = new StaticPagedList<IndexCharacterViewModel>(entitiesViewModel, page, pageSize, totalCount);
+
+        return pagedList;
     }
 
-    async Task<InfoCharacterViewModel> ICharacterService.GetInfoCharacterByIdAsync(int id)
-    {
-        var entity = await _characterRepository.GetCharacterByIdAsync(id);
-        var viewModel = _mapper.Map<InfoCharacterViewModel>(entity);
-
-        return viewModel;
-    }
 
     public async Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id)
     {
@@ -75,10 +68,10 @@ public class CharacterService : ICharacterService
         return viewModel;
     }
 
-    public async Task<AddCharacterViewModel> GetInfoCharacterByIdAsync(int id)
+    public async Task<InfoCharacterViewModel> GetInfoCharacterByIdAsync(int id)
     {
         var entity = await _characterRepository.GetCharacterByIdAsync(id);
-        var viewModel = _mapper.Map<AddCharacterViewModel>(entity);
+        var viewModel = _mapper.Map<InfoCharacterViewModel>(entity);
 
         return viewModel;
     }
