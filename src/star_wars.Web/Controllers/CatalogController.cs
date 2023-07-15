@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using star_wars.Application.Common.Interfaces.Services;
+using star_wars.Application.Common.Models.ViewModels.Character;
 
 
 namespace star_wars.Web.Controllers;
@@ -7,43 +8,66 @@ namespace star_wars.Web.Controllers;
 public class CatalogController : Controller
 {
     private readonly ICharacterService _characterService;
-    private readonly ICharacterViewModelService _characterViewModelService;
 
     public CatalogController(
-        ICharacterService service, 
-        ICharacterViewModelService characterViewModelService)
+        ICharacterService characterService)
     {
-        _characterService = service;
-        _characterViewModelService = characterViewModelService;
+        _characterService = characterService;
     }
     
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var characters = await _characterService.GetAllCharactersAsync();
-        var characterViewModels = _characterViewModelService.MapCharacterListToViewModel(characters);
+        var viewModel = await _characterService.GetAllIndexCharactersAsync();
 
-        return View(characterViewModels);
+        return View(viewModel);
     }
     
     [HttpGet]
-    public async Task<ActionResult> Info(int id)
+    public async Task<IActionResult> Info(int id)
     {
-        var entity = await _characterService.GetCharacterByIdAsync(id);
-        var characterViewModels = _characterViewModelService.MapCharacterToViewModel(entity);
+        var viewModel = await _characterService.GetInfoCharacterByIdAsync(id);
+
+        return View(viewModel);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var viewModel = await _characterService.GetEditCharacterByIdAsync(id);
+
+        return View(viewModel);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditCharacterViewModel viewModel)
+    {
+        await _characterService.UpdateCharacterAsync(viewModel);
         
-        return View(characterViewModels);
+        return RedirectToAction(nameof(Index));
     }
     
-    [HttpPut]
-    public async Task<IActionResult> Edit()
+    
+    [HttpGet]
+    public async Task<IActionResult> Add()
     {
-        return View();
+        var viewModel = await _characterService.GetAddCharacterAsync();
+        return View(viewModel);
     }
     
-    [HttpDelete]
-    public async Task<IActionResult> Delete()
+    [HttpPost]
+    public async Task<IActionResult> Add(AddCharacterViewModel viewModel)
     {
-        return View();
+        await _characterService.AddCharacterAsync(viewModel);
+
+        return RedirectToAction(nameof(Index));
+    }
+    
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _characterService.DeleteCharacterByIdAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }
