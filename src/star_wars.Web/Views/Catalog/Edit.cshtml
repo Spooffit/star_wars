@@ -1,0 +1,243 @@
+﻿@model star_wars.Application.Common.Models.ViewModels.Character.EditCharacterViewModel
+
+@{
+    ViewBag.Title = $"Редактирование персонажа - {@Model.Name}";
+    Layout = "_Layout";
+}
+
+<div class="mb-5">
+    <h2>Редактирование персонажа</h2>
+</div>
+
+<form method="post" asp-action="Edit">
+    <div class="row">
+        <div class="col-8">
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Name">Имя персонажа</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Name" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="OriginName">Имя (в оригинале)</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="OriginName" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="OriginName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Birthdate">Дата рождения</label>
+                </div>
+                <div class="col-8">
+                    <div class="input-group">
+                        <input min="0" type="number" value="@Math.Abs(Model.Birthdate)" id="birthDateUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" required autocomplete="off"/>
+                        <select id="birthDateEpochSelect" class="form-select bg-dark text-white" style="max-width: 80px" onchange="HandleBirthdayValue()">
+                            @if (Model.Birthdate < 0)
+                            {
+                                <option selected value="-1">ДБЯ</option>
+                                <option value="1">ПБЯ</option>
+                            }
+                            else
+                            {
+                                <option value="-1">ДБЯ</option>
+                                <option selected value="1">ПБЯ</option>
+                            }
+                        </select>
+                    </div>
+
+                    <input asp-for="Birthdate" id="birthDateFormInput" hidden>
+                    <span asp-validation-for="Birthdate" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Planet">Планета</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Planet" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="Planet" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Gender">Пол</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Gender" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Species">Раса</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Species" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="Species" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="Height">Рост</label>
+                </div>
+                <div class="col-8">
+                    <input type="number" step="0.01" min="0.01" asp-for="Height" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="Height" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="HairColor">Цвет волос</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="HairColor" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="HairColor" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-4">
+                    <label asp-for="EyeColor">Цвет глаз</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="EyeColor" class="form-control bg-dark text-white" required/>
+                    <span asp-validation-for="EyeColor" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-4">
+            <div class="form-group row p-2">
+                <div class="col-12">
+                    <label class="mb-2">Описание</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white" rows="10" required></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row p-2">
+                <div class="col-12">
+                    <label class="mb-2">Фильмы</label>
+                    <select id="movieSelect" class="form-control form-select bg-dark text-white select-style" onchange="addMovie()">
+                        <option value="" selected hidden>Выберите фильм</option>
+                        @foreach (var movie in Model.RestAllMovies)
+                        {
+                            if (!string.IsNullOrWhiteSpace(movie.Title))
+                            {
+                                <option value="@movie.Title">@movie.Title</option>
+                            }
+                        }
+                    </select>
+
+                    <div id="movieList" class="mt-2 border-light border p-2 d-flex flex-column gap-2">
+                        @if (!string.IsNullOrWhiteSpace(Model.OwnsMovies))
+                        {
+                            foreach (var movieTitle in Model.OwnsMovies.Split(','))
+                            {
+                                <div class="badge bg-light text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center">
+                                    <span>@movieTitle</span>
+                                    <button class="btn-close" type="button" aria-label="Close" onclick="removeMovie(this.parentNode)"></button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="OwnsMovies" id="movieTitles" name="OwnsMovies" />
+
+        </div>
+    </div>
+
+    <div class="form-group row p-2">
+        <div class="col-12">
+            <input type="submit" class="btn btn-light text-dark float-end" value="Сохранить" />
+            <button formaction="@Url.Action("Delete", new {id = Model.Id})" class="btn btn-light text-dark float-end me-2">Удалить</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+     <script>
+            function removeMovie(movie) {
+                var movieTitle = movie.textContent.trim();
+                movie.parentNode.removeChild(movie);
+                updateMovieTitlesInput();
+                
+                var movieSelect = document.getElementById("movieSelect");
+                var option = document.createElement("option");
+                option.value = movieTitle;
+                option.text = movieTitle;
+                movieSelect.appendChild(option);
+            }
+    
+     
+            function addMovie() {
+                var movieSelect = document.getElementById("movieSelect");
+                var movieTitle = movieSelect.value.trim();
+            
+                var movieList = document.getElementById("movieList");
+                var existingTitles = Array.from(movieList.children).map(function (movie) {
+                    return movie.textContent.trim();
+                });
+            
+                if (movieTitle !== "" && !existingTitles.includes(movieTitle)) {
+                    var movie = document.createElement("span");
+                    movie.className = "badge bg-light text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center";
+                    movie.textContent = movieTitle;
+            
+                    var closeButton = document.createElement("button");
+                    closeButton.className = "btn-close";
+                    closeButton.setAttribute("type", "button");
+                    closeButton.setAttribute("aria-label", "Close");
+                    closeButton.addEventListener("click", function () {
+                        removeMovie(movie);
+                    });
+            
+                    movie.appendChild(closeButton);
+            
+                    movieList.appendChild(movie);
+            
+                    movieSelect.removeChild(movieSelect.options[movieSelect.selectedIndex]);
+            
+                    movieSelect.value = "";
+                    updateMovieTitlesInput();
+                }
+            }
+     
+             function updateMovieTitlesInput() {
+                 var movieList = document.getElementById("movieList");
+                 var movieTitles = Array.from(movieList.children).map(function (movie) {
+                     return movie.textContent.trim();
+                 });
+     
+                 var movieTitlesInput = document.getElementById("movieTitles");
+                 movieTitlesInput.value = movieTitles.join(",");
+             }
+        
+        function HandleBirthdayValue(){
+            var birthDateSelect = document.getElementById("birthDateEpochSelect");
+            var userInput = document.getElementById("birthDateUserInput");
+            
+            console.log( userInput.value * birthDateSelect.value);
+            
+            document.getElementById("birthDateFormInput").value = userInput.value * birthDateSelect.value;
+        }
+    </script>
+}

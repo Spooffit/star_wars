@@ -1,6 +1,8 @@
-﻿namespace star_wars.Core.Entities;
+﻿using star_wars.Application.Common.Models.ViewModels.Movie;
 
-public class Character
+namespace star_wars.Application.Common.Models.ViewModels.Character;
+
+public class EditCharacterViewModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -13,5 +15,6 @@ public class Character
     public string HairColor { get; set; }
     public string EyeColor { get; set; }
     public string Description { get; set; }
-    public List<Movie> Movies { get; set; } = new();
+    public List<MovieViewModel> RestAllMovies { get; set; }
+    public string OwnsMovies { get; set; }
 }
