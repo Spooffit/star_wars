@@ -5,9 +5,7 @@ namespace star_wars.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<Character> Characters { get; }
-    DbSet<Movie> Movies { get; }
-    DbSet<Planet> Planets { get; }
+    DbSet<Character> Characters { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
