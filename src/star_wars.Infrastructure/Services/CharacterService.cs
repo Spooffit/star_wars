@@ -35,6 +35,38 @@ public class CharacterService : ICharacterService
 
         return pagedList;
     }
+    
+    public async Task<IPagedList<IndexCharacterViewModel>> GetPagedIndexCharactersAsync(
+        int? searchBirthDateFrom,
+        int? searchBirthDateTo,
+        string? searchPlanet,
+        string? searchMovies,
+        string? searchGender, 
+        int page, 
+        int pageSize)
+    {
+        var entities = await _characterRepository.GetPagedCharactersAsync(            
+            searchBirthDateFrom,
+            searchBirthDateTo,
+            searchPlanet,
+            searchMovies,
+            searchGender, 
+            page, 
+            pageSize);
+        
+        var entitiesViewModel = _mapper.Map<List<IndexCharacterViewModel>>(entities);
+
+        var totalCount = await _characterRepository.GetFilteredCharacterCountAsync(            
+            searchBirthDateFrom,
+            searchBirthDateTo,
+            searchPlanet,
+            searchMovies,
+            searchGender);
+
+        var pagedList = new StaticPagedList<IndexCharacterViewModel>(entitiesViewModel, page, pageSize, totalCount);
+
+        return pagedList;
+    }
 
 
     public async Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id)

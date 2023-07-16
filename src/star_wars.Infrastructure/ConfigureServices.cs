@@ -30,6 +30,7 @@ public static class ConfigureServices
         services.AddScoped<ApplicationDbContextInitializer>();
 
         services.AddScoped<ICharacterService, CharacterService>();
+        services.AddScoped<IMovieService, MovieService>();
         
         services.AddScoped<ICharacterRepository, CharacterRepository>();
         services.AddScoped<IMovieRepository, MovieRepository>();

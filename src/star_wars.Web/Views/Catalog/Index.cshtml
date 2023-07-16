@@ -1,6 +1,6 @@
-﻿@using X.PagedList.Mvc.Core
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model X.PagedList.StaticPagedList<star_wars.Application.Common.Models.ViewModels.Character.IndexCharacterViewModel>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model star_wars.Application.Common.Models.ViewModels.CatalogViewModel
+
 
 @{
     ViewBag.Title = "Каталог";
@@ -9,13 +9,82 @@
 
 <div class="h-100 text-center">
     <h1>Каталог</h1>
-    <a asp-action="Add" class="btn btn-light mt-2"><strong>Добавить персонажа</strong></a>
+    <a asp-action="Add" class="btn btn-light mt-2">
+        <strong>Добавить персонажа</strong>
+    </a>
 </div>
 
-
 <div class="container p-4">
+    <div class="justify-content-center border-top border-bottom border-white mb-5 py-4">
+        <form method="get" asp-controller="Catalog" asp-action="Index" class="mb-4">
+            <div class="row mb-4">
+                <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                    <div class="row d-flex flex-row justify-content-center align-items-center">
+                        <div class="col-6 col-lg-3 col-sm-3 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <label for="searchBirthdateFrom" class="form-label text-nowrap me-2 text-center">Дата рождения с</label>
+                        </div>
+                        <div class="col-6 col-lg-1 col-sm-1 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <input type="number" min="0" id="searchBirthdateFromUserInput" name="searchBirthdateFromUserInput" style="width: 60px" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()">
+                            <input hidden type="number" id="searchBirthdateFrom" name="searchBirthdateFrom">
+                        </div>
+                        <div class="col-12 col-lg-2 col-sm-2 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <select id="searchBirthdateFromEpoch" name="searchBirthdateFromEpoch" class="form-select bg-dark text-white" style="width: 80px" onchange="HandleBirthdayValue()">
+                                <option value="-1">ДБЯ</option>
+                                <option value="1">ПБЯ</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-lg-1 col-sm-1 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <label for="searchBirthdateTo" class="form-label text-nowrap text-center" style="margin-right: 7px">по </label>
+                        </div>
+                        <div class="col-6 col-lg-1 col-sm-1 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <input type="number" min="0" id="searchBirthdateToUserInput" name="searchBirthdateToUserInput" style="width: 60px" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()">
+                            <input hidden type="number" id="searchBirthdateTo" name="searchBirthdateTo">
+                        </div>
+                        <div class="col-12 col-lg-2 col-sm-2 mb-4 mb-lg-0 d-flex flex-row justify-content-center align-items-center">
+                            <select id="searchBirthdateToEpoch" name="searchBirthdateToEpoch" class="form-select bg-dark text-white" style="width: 80px" onchange="HandleBirthdayValue()">
+                                <option value="1">ПБЯ</option>
+                                <option value="-1">ДБЯ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 d-flex flex-row justify-content-evenly align-items-center">
+                    <label for="searchPlanet" class="form-label w-25">Планета</label>
+                    <input id="searchPlanet" name="searchPlanet" type="text" class="form-control w-25 bg-dark text-white"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-lg-0 d-flex flex-row justify-content-evenly align-items-center">
+                    <label for="searchMovies" class="form-label w-25">Фильмы</label>
+                    <select id="searchMovies" name="searchMovies" class="form-select w-25 bg-dark text-white">
+                        <option selected></option>
+                        @foreach (var movie in Model.MoviesTitles)
+                        {
+                            if (!string.IsNullOrWhiteSpace(movie))
+                            {
+                                <option value="@movie">@movie</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-6 col-md-12 d-flex flex-row justify-content-evenly align-items-center">
+                    <label for="searchGender" class="form-label w-25">Пол</label>
+                    <select id="searchGender" name="searchGender" class="form-control form-select bg-dark text-white w-25 select-style">
+                        <option selected></option>
+                        <option value="Женский" >Женский</option>
+                        <option value="Мужской" >Мужской</option>
+                    </select>
+                </div>
+                <div class="col-md d-flex flex-row justify-content-end align-items-center mt-4">
+                    <button type="submit" class="btn btn-light">Принять фильтр</button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
     <div class="row justify-content-center">
-        @foreach (var character in Model)
+        @foreach (var character in Model.Characters)
         {
             <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
                 <div class="card bg-dark text-white border-white">
@@ -25,47 +94,61 @@
                             <h6 class="card-subtitle mb-2 text-muted">@character.OriginName</h6>
                         </div>
                         <div class="d-flex w-25 justify-content-between align-items-center">
-                            <a asp-route-id="@character.Id" asp-action="Info" class="text-white"><i class="bi bi bi-info-circle fs-5"></i></a>
-                            <a asp-route-id="@character.Id" asp-action="Edit" class="text-white"><i class="bi bi-pencil-fill"></i></a>
+                            <a asp-route-id="@character.Id" asp-action="Info" class="text-white">
+                                <i class="bi bi bi-info-circle fs-5"></i>
+                            </a>
+                            <a asp-route-id="@character.Id" asp-action="Edit" class="text-white">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
-<div class="pagination justify-content-center">
-    <ul class="pagination justify-content-center">
-        @if (Model.PageCount > 1)
-        {
-            @if (!Model.IsFirstPage)
+    <div class="pagination justify-content-center">
+        <ul class="pagination justify-content-center">
+            @if (Model.Characters.PageCount > 1)
             {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize })"><i class="bi bi-arrow-return-left"></i></a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1, pageSize = Model.PageSize })"><i class="bi bi-caret-left-fill"></i></a>
-                </li>
-            }
+                @if (!Model.Characters.IsFirstPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = 1, pageSize = Model.Characters.PageSize })">
+                            <i class="bi bi-arrow-return-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Characters.PageNumber - 1, pageSize = Model.Characters.PageSize })">
+                            <i class="bi bi-caret-left-fill"></i>
+                        </a>
+                    </li>
+                }
 
-            @for (var i = 1; i <= Model.PageCount; i++)
-            {
-                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize })"><strong>@i</strong></a>
-                </li>
-            }
+                @for (var i = 1; i <= Model.Characters.PageCount; i++)
+                {
+                    <li class="page-item @(Model.Characters.PageNumber == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.Characters.PageSize })">
+                            <strong>@i</strong>
+                        </a>
+                    </li>
+                }
 
-            @if (!Model.IsLastPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1, pageSize = Model.PageSize })"><i class="bi bi-caret-right-fill"></i></a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { page = Model.PageCount, pageSize = Model.PageSize })"><i class="bi bi-arrow-return-right"></i></a>
-                </li>
+                @if (!Model.Characters.IsLastPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Characters.PageNumber + 1, pageSize = Model.Characters.PageSize })">
+                            <i class="bi bi-caret-right-fill"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Characters.PageCount, pageSize = Model.Characters.PageSize })">
+                            <i class="bi bi-arrow-return-right"></i>
+                        </a>
+                    </li>
+                }
             }
-        }
-    </ul>
-</div>
+        </ul>
+    </div>
 
 </div>
 
@@ -88,6 +171,16 @@
                 alignCardHeights();
             });
         });
+        
+        function HandleBirthdayValue(){
+            var selectFrom = document.getElementById("searchBirthdateFromEpoch");
+            var selectTo = document.getElementById("searchBirthdateToEpoch");
+            
+            var userInputFrom = document.getElementById("searchBirthdateFromUserInput");
+            var userInputTo = document.getElementById("searchBirthdateToUserInput");
+            
+            document.getElementById("searchBirthdateFrom").value = selectFrom.value * userInputFrom.value;
+            document.getElementById("searchBirthdateTo").value = selectTo.value * userInputTo.value;
+        }
     </script>
 }
-
