@@ -21,42 +21,42 @@
 </div>
 
 <div class="container p-4">
-    <div class="justify-content-center border-top border-bottom border-white mb-5 py-4">
-        <form method="get" asp-controller="Catalog" asp-action="Index" class="mb-4">
-            <div class="row mb-4 d-flex justify-content-center align-items-center">
-                <div class="row col-lg-6 col-md-12 mb-lg-0 d-flex justify-content-center align-items-center">
-                    <div class="row mb-4 d-flex justify-content-center align-items-center">
-                        <div class="col-6 col-lg-3 col-md-3 col-sm-3 mb-lg-0 mb-4 mb-sm-0 d-flex justify-content-end justify-content-sm-end align-items-center">
-                            <label class="form-label me-2 text-nowrap text-center">Дата рождения c</label>
-                        </div>
-                        <div class="col-6 col-lg-3 col-md-1 col-sm-2 mb-lg-0 mb-4 mb-sm-0 d-flex justify-content-center justify-content-sm-center align-items-center">
-                            <input type="number" min="0" id="searchBirthdateFromUserInput" name="searchBirthdateFromUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" style="width: 60px">
-                            <input hidden type="number" id="searchBirthdateFrom" name="searchBirthdateFrom">
-                        </div>
-                        <div class="col-12 col-lg-4 col-md-1 col-sm-2 mb-lg-0 d-flex justify-content-center justify-content-sm-start align-items-center">
-                            <select id="searchBirthdateFromEpoch" name="searchBirthdateFromEpoch" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()" style="width: 100px">
-                                <option value="-1">ДБЯ</option>
-                                <option value="1">ПБЯ</option>
-                            </select>
-                        </div>
+    <form method="get" asp-controller="Catalog" asp-action="Index" class="mb-4">
+        <div class="row border-top border-bottom border-white mb-5 py-4">
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="form-floating row mb-4">
+                    <div class="col-6 d-flex justify-content-center">
+                        <label class="form-label me-2 text-nowrap text-center">Дата рождения c</label>
                     </div>
-                    <div class="row d-flex mb-4 justify-content-center align-items-center">
-                        <div class="col-6 col-lg-3 col-md-3 col-sm-3 mb-lg-0 mb-4 mb-sm-0 d-flex justify-content-end justify-content-sm-end align-items-center">
-                            <label for="searchBirthdateTo" class="form-label text-nowrap text-center">по </label>
-                        </div>
-                        <div class="col-6 col-lg-3 col-md-1 col-sm-2 mb-lg-0 mb-4 mb-sm-0 d-flex justify-content-center justify-content-sm-center align-items-center">
-                            <input type="number" min="0" id="searchBirthdateToUserInput" name="searchBirthdateToUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" style="width: 60px">
-                            <input hidden type="number" id="searchBirthdateTo" name="searchBirthdateTo">
-                        </div>
-                        <div class="col-12 col-lg-4 col-md-1 col-sm-2 mb-lg-0 d-flex justify-content-center justify-content-sm-start align-items-center">
-                            <select id="searchBirthdateToEpoch" name="searchBirthdateToEpoch" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()" style="width: 100px">
-                                <option value="1">ПБЯ</option>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <input type="number" min="0" id="searchBirthdateFromUserInput" name="searchBirthdateFromUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()">
+                            <select id="searchBirthdateFromEpoch" name="searchBirthdateFromEpoch" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()" style="max-width: 90px">
                                 <option value="-1">ДБЯ</option>
+                                <option value="1">ПБЯ</option>
                             </select>
                         </div>
+                        <input hidden type="number" id="searchBirthdateFrom" name="searchBirthdateFrom">
                     </div>
                 </div>
-                <div class="row col-lg-6 col-md-12 mb-lg-0">
+                <div class="form-floating row">
+                    <div class="col-6 d-flex justify-content-center">
+                        <label for="searchBirthdateTo" class="form-label text-nowrap text-center">по </label>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group">
+                            <input type="number" min="0" id="searchBirthdateToUserInput" name="searchBirthdateToUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()">
+                            <select id="searchBirthdateToEpoch" name="searchBirthdateToEpoch" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()" style="max-width: 90px">
+                                <option value="1">ПБЯ</option>
+                                <option value="-1">ДБЯ</option>
+                            </select>
+                        </div>
+                        <input hidden type="number" id="searchBirthdateTo" name="searchBirthdateTo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="form-floating row">
                     <div class="col-6 d-flex justify-content-center">
                         <label for="searchPlanet" class="form-label">Планета</label>
                     </div>
@@ -65,8 +65,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-center align-items-center">
-                <div class="row col-lg-6 col-md-12 mb-4 mb-lg-0">
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="form-floating row">
                     <div class="col-6 d-flex justify-content-center">
                         <label for="searchMovies" class="form-label">Фильмы</label>
                     </div>
@@ -83,7 +83,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="row col-lg-6 col-md-12 mb-lg-0">
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="form-floating row">
                     <div class="col-6 d-flex justify-content-center">
                         <label for="searchGender" class="form-label">Пол</label>
                     </div>
@@ -96,18 +98,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-5">
-                <div class="col-6 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-light">Принять фильтр</button>
-                </div>
-                <div class="col-6 d-flex justify-content-start">
-                    <a asp-action="Index" class="btn btn-light">Сбросить фильтр</a>
-                </div>
-            </div>
-        </form>
-
-
-    </div>
+        </div>
+    </form>
     <div class="row justify-content-center align-items-center">
         @foreach (var character in Model.Characters)
         {
