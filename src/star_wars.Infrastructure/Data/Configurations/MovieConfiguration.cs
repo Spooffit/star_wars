@@ -8,17 +8,17 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
-        // builder.HasKey(m => m.Id);
-        // builder.HasIndex(m => m.Id)
-        //     .IsUnique();
-        // builder.HasIndex(m => m.Title)
-        //     .IsUnique();
-        // builder.Property(m => m.Id)
-        //     .ValueGeneratedOnAdd();
+        builder.HasKey(m => m.Id);
+        builder.HasIndex(m => m.Id)
+            .IsUnique();
+        builder.Property(m => m.Id)
+            .ValueGeneratedOnAdd();
+        builder.HasIndex(m => m.Title)
+            .IsUnique();
 
-        // builder.Property(m => m.Title)
-        //     .HasMaxLength(100)
-        //     .IsRequired();
+        builder.Property(m => m.Title)
+            .HasMaxLength(100)
+            .IsRequired();
         
         builder.HasMany(c => c.Characters)
             .WithMany(m => m.Movies)
