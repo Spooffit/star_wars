@@ -6,13 +6,12 @@
 }
 
 <div class="mb-5">
-    <h2>Добавление персонажа</h2>
+    <h2><a asp-action="Index"><i class="bi bi-arrow-left text-white me-2"></i></a> Добавление персонажа</h2>
 </div>
 
 <form method="post" asp-action="Add">
     <div class="row">
-        <div class="col-8">
-
+        <div class="col-12 col-md-8">
             <div class="form-group row p-2">
                 <div class="col-4">
                     <label asp-for="Name">Имя персонажа</label>
@@ -122,7 +121,7 @@
 
         </div>
 
-        <div class="col-4">
+        <div class="col-12 col-md-4">
             <div class="form-group row p-2">
                 <div class="col-12">
                     <label class="mb-2">Описание</label>
@@ -131,7 +130,7 @@
                 </div>
             </div>
 
-            <div class="form-group row p-2">
+            <div class="form-group row p-2 mt-4">
                 <div class="col-12">
                     <label class="mb-2">Фильмы</label>
                     <select id="movieSelect" class="form-control form-select bg-dark text-white select-style" onchange="addMovie()">
@@ -145,7 +144,7 @@
                         }
                     </select>
 
-                    <div id="movieList" class="mt-2 border-light border p-2 d-flex flex-column gap-2">
+                    <div id="movieList" class="mt-2 p-2 d-flex flex-column gap-2">
                         @if (!string.IsNullOrWhiteSpace(Model.OwnsMovies))
                         {
                             foreach (var movieTitle in Model.OwnsMovies.Split(','))
@@ -199,7 +198,7 @@
             
                 if (movieTitle !== "" && !existingTitles.includes(movieTitle)) {
                     var movie = document.createElement("span");
-                    movie.className = "badge bg-light text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center";
+                    movie.className = "badge bg-light text-wrap text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center";
                     movie.textContent = movieTitle;
             
                     var closeButton = document.createElement("button");
@@ -235,7 +234,6 @@
             var birthDateSelect = document.getElementById("birthDateEpochSelect");
             var userInput = document.getElementById("birthDateUserInput");
             
-            console.log( userInput.value * birthDateSelect.value);
             
             document.getElementById("birthDateFormInput").value = userInput.value * birthDateSelect.value;
         }
