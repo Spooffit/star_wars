@@ -11,11 +11,11 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
         builder.HasKey(c => c.Id);
         builder.HasIndex(c => c.Id)
             .IsUnique();
+        builder.Property(c => c.Id)
+            .ValueGeneratedOnAdd();
         builder.HasIndex(c => c.Gender);
         builder.HasIndex(c => c.Birthdate);
         builder.HasIndex(c => c.Species);
-        builder.Property(c => c.Id)
-            .ValueGeneratedOnAdd();
 
         builder.Property(c => c.Name)
             .HasMaxLength(100)
@@ -42,10 +42,9 @@ public class CharacterConfiguration : IEntityTypeConfiguration<Character>
         builder.Property(c => c.Description)
             .HasMaxLength(2000)
             .IsRequired();
-        builder.HasOne(c => c.Planet)
-            .WithMany();
+        
         builder.HasMany(c => c.Movies)
-            .WithMany()
+            .WithMany(m => m.Characters)
             .UsingEntity("CharactersMovie");
     }
 }

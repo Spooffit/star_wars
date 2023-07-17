@@ -10,7 +10,7 @@ html {
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none; // Yeah, yeah everybody write about it
+  -webkit-appearance: none;
 }
 
 input[type='number'],
@@ -31,6 +31,7 @@ html {
 
 body {
   margin-bottom: 60px;
+  font-family: 'Tektur', sans-serif;
 }
 
 .logo{
@@ -38,12 +39,28 @@ body {
   max-height: 100px;
 }
 
+textarea {
+  resize: none;
+}
+
+ul{
+  padding: 0;
+}
+
+.bi {
+  transition: all ease-in-out .2s;
+}
+
+.bi:hover {
+  transform: scale(1.5);
+}
+
 .form-control:focus {
   border-color: #ffffff;
   box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
 }
 
-btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #89a7ff;
 }
 
@@ -54,18 +71,59 @@ btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
 
 .select-style:hover,
 .select-style:focus {
-  background-color: #fff;
-  color: #000;
+  background-color: white;
+  color: black;
 }
 
 .select-style option:first-child {
-  color: #aaa;
+  color: white;
 }
 
-textarea {
-  resize: none;
+.nav-pills .nav-link.active {
+  color: black;
+  background-color: white;
 }
 
-ul{
-  padding: 0;
+.nav-pills .nav-link {
+  color: white;
+}
+
+.pagination > li > a
+{
+  background-color: black;
+  color: white;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+
+.pagination > .active > a
+{
+  color: black; ;
+  background-color: white !important;
+  border: solid 1px black !important;
+}
+
+.page-item.active .page-link {
+  color: black;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+.pagination > .active > a:hover
+{
+  background-color: white !important;
+  border: solid 1px black;
 }

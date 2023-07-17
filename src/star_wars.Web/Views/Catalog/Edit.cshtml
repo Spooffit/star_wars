@@ -40,7 +40,7 @@
                 <div class="col-8">
                     <div class="input-group">
                         <input min="0" type="number" value="@Math.Abs(Model.Birthdate)" id="birthDateUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" required autocomplete="off"/>
-                        <select id="birthDateEpochSelect" class="form-select bg-dark text-white" style="max-width: 80px" onchange="HandleBirthdayValue()">
+                        <select id="birthDateEpochSelect" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()">
                             @if (Model.Birthdate < 0)
                             {
                                 <option selected value="-1">ДБЯ</option>
@@ -234,8 +234,6 @@
         function HandleBirthdayValue(){
             var birthDateSelect = document.getElementById("birthDateEpochSelect");
             var userInput = document.getElementById("birthDateUserInput");
-            
-            console.log( userInput.value * birthDateSelect.value);
             
             document.getElementById("birthDateFormInput").value = userInput.value * birthDateSelect.value;
         }
