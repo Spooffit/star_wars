@@ -19,7 +19,7 @@ Study project. Simple ASP.NET MVC. Catalog of characters from the Star Wars univ
 
 * [ASP.NET MVC 7](https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-7.0&tabs=visual-studio)
 * [Entity Framework 7](https://github.com/dotnet/efcore)
-* [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio)
+* [ASP.NET Core Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio)
 * [AutoMapper](https://github.com/AutoMapper/AutoMapper)
 * [X.PagedList](https://github.com/dncuug/X.PagedList)
 * [Bootstrap](https://getbootstrap.com/)
