@@ -11,7 +11,7 @@
 
 <form method="post" asp-action="Edit">
     <div class="row">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
 
             <div class="form-group row p-2">
                 <div class="col-4">
@@ -40,7 +40,7 @@
                 <div class="col-8">
                     <div class="input-group">
                         <input min="0" type="number" value="@Math.Abs(Model.Birthdate)" id="birthDateUserInput" class="form-control bg-dark text-white" onchange="HandleBirthdayValue()" required autocomplete="off"/>
-                        <select id="birthDateEpochSelect" class="form-select bg-dark text-white" onchange="HandleBirthdayValue()">
+                        <select id="birthDateEpochSelect" class="form-select bg-dark text-white" style="max-width: 90px" onchange="HandleBirthdayValue()">
                             @if (Model.Birthdate < 0)
                             {
                                 <option selected value="-1">ДБЯ</option>
@@ -122,7 +122,7 @@
 
         </div>
 
-        <div class="col-4">
+        <div class="col-12 col-md-4">
             <div class="form-group row p-2">
                 <div class="col-12">
                     <label class="mb-2">Описание</label>
@@ -131,7 +131,7 @@
                 </div>
             </div>
 
-            <div class="form-group row p-2">
+            <div class="form-group row p-2 mt-4">
                 <div class="col-12">
                     <label class="mb-2">Фильмы</label>
                     <select id="movieSelect" class="form-control form-select bg-dark text-white select-style" onchange="addMovie()">
@@ -145,7 +145,7 @@
                         }
                     </select>
 
-                    <div id="movieList" class="mt-2 border-light border p-2 d-flex flex-column gap-2">
+                    <div id="movieList" class="mt-2 p-2 d-flex flex-column gap-2">
                         @if (!string.IsNullOrWhiteSpace(Model.OwnsMovies))
                         {
                             foreach (var movieTitle in Model.OwnsMovies.Split(','))
@@ -199,7 +199,7 @@
             
                 if (movieTitle !== "" && !existingTitles.includes(movieTitle)) {
                     var movie = document.createElement("span");
-                    movie.className = "badge bg-light text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center";
+                    movie.className = "badge bg-light text-wrap text-dark me-2 w-100 p-2 d-flex flex-row justify-content-between align-items-center";
                     movie.textContent = movieTitle;
             
                     var closeButton = document.createElement("button");
