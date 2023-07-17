@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Application.Common.Models.ViewModels;
 using star_wars.Application.Common.Models.ViewModels.Character;
@@ -11,7 +13,7 @@ public class CatalogController : Controller
 {
     private readonly ICharacterService _characterService;
     private readonly IMovieService _movieService;
-
+    
     public CatalogController(
         ICharacterService characterService, 
         IMovieService movieService)
@@ -65,23 +67,36 @@ public class CatalogController : Controller
     }
     
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Edit(int id)
     {
         var viewModel = await _characterService.GetEditCharacterByIdAsync(id);
 
+        var hasPermission = await CheckForPermission(id);
+        if (!hasPermission)
+        {
+            return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+        }
+
         return View(viewModel);
     }
-    
+
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Edit(EditCharacterViewModel viewModel)
     {
+        var hasPermission = await CheckForPermission(viewModel.Id);
+        if (!hasPermission)
+        {
+            return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+        }
         await _characterService.UpdateCharacterAsync(viewModel);
         
         return RedirectToAction(nameof(Index));
     }
     
-    
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Add()
     {
         var viewModel = await _characterService.GetAddCharacterAsync();
@@ -89,18 +104,31 @@ public class CatalogController : Controller
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Add(AddCharacterViewModel viewModel)
     {
+        viewModel.OwnerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _characterService.AddCharacterAsync(viewModel);
-
         return RedirectToAction(nameof(Index));
     }
     
-    
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
+        var hasPermission = await CheckForPermission(id);
+        if (!hasPermission)
+        {
+            return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+        }
         await _characterService.DeleteCharacterByIdAsync(id);
         return RedirectToAction(nameof(Index));
+    }
+    
+    private async Task<bool> CheckForPermission(int characterId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var isOwner = await _characterService.IsCharacterOwnerAsync(characterId, userId);
+        return isOwner;
     }
 }

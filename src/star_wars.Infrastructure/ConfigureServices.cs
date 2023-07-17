@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using star_wars.Application.Common.Interfaces;
 using star_wars.Application.Common.Interfaces.Repositories;
 using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Infrastructure.Data;
+using star_wars.Infrastructure.Data.Identity;
 using star_wars.Infrastructure.Data.Repositories;
 using star_wars.Infrastructure.Services;
 
@@ -23,11 +25,18 @@ public static class ConfigureServices
         {
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
         });
-
+        
         services.AddScoped<IApplicationDbContext>(provider => 
             provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddScoped<ApplicationDbContextInitializer>();
+
+        services
+            .AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultUI()
+            .AddDefaultTokenProviders();
+        
 
         services.AddScoped<ICharacterService, CharacterService>();
         services.AddScoped<IMovieService, MovieService>();

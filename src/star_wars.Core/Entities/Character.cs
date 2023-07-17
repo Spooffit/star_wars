@@ -3,6 +3,7 @@
 public class Character
 {
     public int Id { get; set; }
+    public Guid OwnerId { get; set; }
     public string Name { get; set; }
     public string OriginName { get; set; }
     public int Birthdate { get; set; }

@@ -4,6 +4,7 @@ namespace star_wars.Application.Common.Models.ViewModels.Character;
 
 public class AddCharacterViewModel
 {
+    public Guid OwnerId { get; set; }
     public string Name { get; set; }
     public string OriginName { get; set; }
     public int Birthdate { get; set; }

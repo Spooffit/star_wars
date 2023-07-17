@@ -68,7 +68,13 @@ public class CharacterService : ICharacterService
         return pagedList;
     }
 
+    public async Task<bool> IsCharacterOwnerAsync(int characterId, Guid userId)
+    {
+        var character = await _characterRepository.GetCharacterByIdAsync(characterId);
 
+        return character.OwnerId == userId;
+    }
+    
     public async Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id)
     {
         var entity = await _characterRepository.GetCharacterByIdAsync(id);

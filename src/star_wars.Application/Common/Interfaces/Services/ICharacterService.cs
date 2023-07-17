@@ -16,6 +16,7 @@ public interface ICharacterService
         int page, 
         int pageSize);
 
+    Task<bool> IsCharacterOwnerAsync(int characterId, Guid userId);
     Task<EditCharacterViewModel> GetEditCharacterByIdAsync(int id);
     Task<InfoCharacterViewModel> GetInfoCharacterByIdAsync(int id);
 

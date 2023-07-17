@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using star_wars.Core.Constants;
 using star_wars.Core.Entities;
+using star_wars.Infrastructure.Data.Identity;
 
 namespace star_wars.Infrastructure.Data;
 
@@ -27,13 +30,20 @@ public class ApplicationDbContextInitializer
 {
     private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly ApplicationDbContext _context;
+    
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
     public ApplicationDbContextInitializer(
         ILogger<ApplicationDbContextInitializer> logger,
-        ApplicationDbContext context)
+        ApplicationDbContext context, 
+        UserManager<ApplicationUser> userManager, 
+        RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _context = context;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     public async Task InitialiseAsync()
@@ -69,16 +79,44 @@ public class ApplicationDbContextInitializer
 
     private async Task TrySeedAsync()
     {
+        Guid userId = Guid.NewGuid();
+        
+        if (!_context.Users.Any() && !_context.Roles.Any())
+            userId = await SeedUserAndRole();
+        
+        if (!_context.Movies.Any())
+            await SeedMovies();
+        
         if (!_context.Characters.Any())
-        {
-            SeedMovies();
-            SeedCharacters();
-
-            _context.SaveChanges();
-        }
+            await SeedCharacters(userId);
+        
+        await _context.SaveChangesAsync();
     }
 
-    private void SeedMovies()
+    private async Task<Guid> SeedUserAndRole()
+    {
+        var userRole = new IdentityRole(Roles.User);
+
+        if (_roleManager.Roles.All(r => r.Name != userRole.Name))
+        {
+            await _roleManager.CreateAsync(userRole);
+        }
+        
+        var user = new ApplicationUser { UserName = "user@localhost", Email = "user@localhost" };
+
+        if (_userManager.Users.All(u => u.UserName != user.UserName))
+        {
+            await _userManager.CreateAsync(user, "User1!");
+            if (!string.IsNullOrWhiteSpace(userRole.Name))
+            {
+                await _userManager.AddToRolesAsync(user, new [] { userRole.Name });
+            }
+        }
+
+        return Guid.Parse(user.Id);
+    }
+
+    private async Task SeedMovies()
     {
         List<Movie> movies = new List<Movie>
         {
@@ -95,18 +133,19 @@ public class ApplicationDbContextInitializer
             new Movie { Title = "Звёздные войны. Истории: Рог одного" },
             new Movie { Title = "Звёздные войны: Повстанцы" },
         };
-        _context.AddRange(movies);
-        _context.SaveChanges();
+        await _context.AddRangeAsync(movies);
+        await _context.SaveChangesAsync();
     }
 
-    private void SeedCharacters()
+    private async Task SeedCharacters(Guid ownerId)
     {
-        var movies = _context.Movies.ToList();
+        var movies = await _context.Movies.ToListAsync();
 
         List<Character> characters = new List<Character>
         {
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Дарт Вейдер",
                 OriginName = "Darth Vader",
                 Birthdate = -42,
@@ -135,6 +174,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Йода",
                 OriginName = "Yoda",
                 Birthdate = -896,
@@ -161,6 +201,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Дин Джарин",
                 OriginName = "Din Djarin",
                 Birthdate = 20,
@@ -183,6 +224,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Люк Скайуокер",
                 OriginName = "Luke Skywalker",
                 Birthdate = -19,
@@ -209,6 +251,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Оби-Ван Кеноби",
                 OriginName = "Obi-Wan Kenobi",
                 Birthdate = -57,
@@ -235,6 +278,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Дарт Сидиус",
                 OriginName = "Darth Sidious",
                 Birthdate = -82,
@@ -258,6 +302,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Хан Соло",
                 OriginName = "Han Solo",
                 Birthdate = -29,
@@ -282,6 +327,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Лея Органа-Соло",
                 OriginName = "Leia Organa-Solo",
                 Birthdate = -19,
@@ -307,6 +353,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Рей",
                 OriginName = "Rey",
                 Birthdate = 15,
@@ -329,6 +376,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Финн",
                 OriginName = "Finn",
                 Birthdate = -11,
@@ -351,6 +399,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "По Дамерон",
                 OriginName = "Poe Dameron",
                 Birthdate = -8,
@@ -373,6 +422,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Кайло Рен",
                 OriginName = "Kylo Ren",
                 Birthdate = -5,
@@ -395,6 +445,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Джин Эрсо",
                 OriginName = "Jyn Erso",
                 Birthdate = -21,
@@ -416,6 +467,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Кассиан Андор",
                 OriginName = "Cassian Andor",
                 Birthdate = -26,
@@ -437,6 +489,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Джаред",
                 OriginName = "Saw Gerrera",
                 Birthdate = -41,
@@ -458,6 +511,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Бодди Риггс",
                 OriginName = "Bodhi Rook",
                 Birthdate = -25,
@@ -478,6 +532,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Чирру Имвэй",
                 OriginName = "Chirrut Îmwe",
                 Birthdate = -51,
@@ -497,6 +552,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Гальен Эрсо",
                 OriginName = "Galen Erso",
                 Birthdate = -52,
@@ -517,6 +573,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Квилл",
                 OriginName = "Kuiil",
                 Birthdate = -64,
@@ -536,6 +593,7 @@ public class ApplicationDbContextInitializer
             },
             new Character
             {
+                OwnerId = ownerId,
                 Name = "Гроугу",
                 OriginName = "Grogu",
                 Birthdate = -41,
@@ -555,6 +613,6 @@ public class ApplicationDbContextInitializer
                 }
             }
         };
-        _context.AddRange(characters);
+        await _context.AddRangeAsync(characters);
     }
 }
