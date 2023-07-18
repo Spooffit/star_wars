@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using star_wars.Application.Common.Interfaces.Services;
 using star_wars.Application.Common.Models.ViewModels;
 using star_wars.Application.Common.Models.ViewModels.Character;
@@ -107,7 +108,12 @@ public class CatalogController : Controller
     [Authorize]
     public async Task<IActionResult> Add(AddCharacterViewModel viewModel)
     {
-        viewModel.OwnerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!userStringId.IsNullOrEmpty())
+        {
+            viewModel.OwnerId = Guid.Parse(userStringId);
+        }
+        
         await _characterService.AddCharacterAsync(viewModel);
         return RedirectToAction(nameof(Index));
     }
@@ -127,8 +133,14 @@ public class CatalogController : Controller
     
     private async Task<bool> CheckForPermission(int characterId)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var isOwner = await _characterService.IsCharacterOwnerAsync(characterId, userId);
-        return isOwner;
+        var userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!userStringId.IsNullOrEmpty())
+        {
+            var userId = Guid.Parse(userStringId);
+            var isOwner = await _characterService.IsCharacterOwnerAsync(characterId, userId);
+            return isOwner;
+        }
+
+        return false;
     }
 }
