@@ -11,7 +11,7 @@
 
 <br>
 
-Study project. Simple ASP.NET MVC. Catalog of characters from the Star Wars universe.
+Test task. Simple ASP.NET MVC. Catalog of characters from the Star Wars universe.
 
 <hr>
 
